@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f3f6fa;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e1e8f0;
+    }
+    .header {
+      background-color: #2560a0;
+      color: #ffffff;
+      text-align: center;
+      padding: 30px 20px;
+    }
+    .header img {
+      max-width: 120px;
+      margin-bottom: 15px;
+    }
+    .header h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+    .content {
+      padding: 25px;
+      color: #333333;
+      text-align: center;
+    }
+    .content p {
+      font-size: 16px;
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+    .button {
+      display: inline-block;
+      background-color: #2560a0; /* Couleur bleue */
+      color: #ffffff !important; /* Texte blanc, forcé avec !important */
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #1d4d81; /* Bleu plus foncé au survol */
+      color: #ffffff !important; /* Texte blanc même au survol */
+    }
+    .footer {
+      background-color: #f9fbfd;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #777777;
+      border-top: 1px solid #e1e8f0;
+    }
+    .footer p {
+      margin: 0;
+      font-size: 12px;
+    }
+    .footer a {
+      color: #d01e3e; /* Couleur personnalisée pour le lien */
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+      color: #a3162f; /* Rouge plus foncé au survol */
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header Section -->
+    <div class="header">
+      <img src="http://localhost:3000/uploads/photos/logo.png" alt="Logo" />
+      <h1>Notification</h1>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+      <p>Bonjour <strong>{{firstName}} {{lastName}}</strong>,</p>
+      <p>{{taskTitle}}</p>
+      <a href="{{actionUrl}}" class="button">Voir la Tâche</a>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+      <p>© 2025 Wifak Bank. Tous droits réservés.</p>
+      <p>
+        <a href="https://www.wifakbank.com">Visitez notre site</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

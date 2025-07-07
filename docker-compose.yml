@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./gdp-backend
+    container_name: gdp-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - gdpnet
+    env_file:
+      - ./gdp-backend/.env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=gestion_projet_wifakbank
+
+  frontend:
+    build: ./gdp-frontend
+    container_name: gdp-frontend
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:3000
+    depends_on:
+      - backend
+    networks:
+      - gdpnet
+    env_file:
+      - ./gdp-frontend/.env
+
+  db:
+    image: postgres:15
+    container_name: gdp-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=gestion_projet_wifakbank
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - gdpnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+
+networks:
+  gdpnet:
+    driver: bridge

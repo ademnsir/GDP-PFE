@@ -1,0 +1,261 @@
+
+        <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demande de Congé</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            margin: 20px;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            padding: 15px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .black-bar {
+            background: black;
+            height: 20px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            line-height: 20px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .section {
+            margin-bottom: 10px;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            width: 100%;
+        }
+        .label {
+            width: 160px;
+        }
+        .value {
+            flex: 1;
+            text-align: left;
+            border-bottom: 1px solid black;
+            padding-bottom: 2px;
+            margin-left: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .checkbox-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        .footer {
+            font-size: 12px;
+            margin-top: 15px;
+            text-align: justify;
+        }
+        .signature {
+            text-align: right;
+            margin-right: 20px;
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 12px;
+        }
+        .decision-section {
+            margin-top: 15px;
+            page-break-inside: avoid; /* ✅ Empêche la coupure sur deux pages */
+        }
+        .signature-block {
+            margin-bottom: 40px;
+    margin-left: 600px; /* ✅ Maintenant, le margin-left fonctionnera */
+    display: inline-block; /* ✅ S'assurer que l'élément prend seulement la largeur nécessaire */
+        }
+        
+/* Ajout d'espace entre "Matricule" et "Service" */
+.matricule-service {
+    margin-left: 110px;
+   
+}
+/* Ajout d'espace entre "Période du" et "au" */
+.periode-au {
+    margin-left: 60px;
+    margin-right: 20px;
+}
+
+.decision-section {
+    margin-top: 20px; /* ✅ Ajoute un espace entre les sections précédentes */
+    page-break-inside: avoid; /* ✅ Empêche la coupure sur plusieurs pages */
+}
+.signaturef {
+    margin-bottom: 60px;
+    margin-left: 600px; /* ✅ Maintenant, le margin-left fonctionnera */
+    display: inline-block; /* ✅ S'assurer que l'élément prend seulement la largeur nécessaire */
+}
+
+
+
+
+
+
+        /* Ajustements pour impression */
+        @media print {
+            body {
+                margin: 10px;
+                padding: 5px;
+                font-size: 12px;
+            }
+            .container {
+                max-width: 100%;
+                padding: 5px;
+            }
+            .black-bar {
+                height: 18px;
+                font-size: 14px;
+                line-height: 18px;
+            }
+            .row {
+                padding: 3px 0;
+                font-size: 12px;
+            }
+            .footer {
+                font-size: 11px;
+                margin-top: 5px;
+            }
+            .decision-section {
+                page-break-inside: avoid;
+                margin-top: 5px;
+            }
+            .signature {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="data:image/png;base64,{{logoBase64}}" width="120" />
+        </div>
+        <div class="title">Demande de Congé</div>
+        <div class="black-bar">L’Employé</div>
+
+        <div class="section">
+            <div class="row">
+                <span class="label">Nom de l'employé :</span>
+                <span class="value"><b>{{ firstName }} {{ lastName }}</b></span>
+              </div>
+              
+            <div class="row">
+                <span class="label">Matricule :</span>
+                <span class="value"><b>{{matricule}}</b></span>
+                <span class="label matricule-service">Service :</span>
+                <span class="value"><b>{{service}}</b></span>
+            </div>
+          
+            <div class="row">
+                <span class="label">Responsable :</span>
+                <span class="value"><b>{{responsable}}</b></span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <span class="label">Type de congé :</span>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" {{#if isMaladie}}checked="checked"{{/if}}> Maladie</label>
+                    <label><input type="checkbox" {{#if isConge}}checked="checked"{{/if}}> Congé</label>
+                    <label><input type="checkbox" {{#if isDeces}}checked="checked"{{/if}}> Décès</label>
+                    <label><input type="checkbox" {{#if isMariage}}checked="checked"{{/if}}> Congé Mariage</label>
+                    <label><input type="checkbox" {{#if isAutres}}checked="checked"{{/if}}> Autres</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <span class="label">Période du :</span>
+                <span class="value"><b>{{startDate}}</b></span>
+                <span class="label periode-au">au :</span>
+                
+                <span class="value"><b>{{endDate}}</b></span>
+            </div>
+            <div class="row">
+                <span class="label">Date de reprise :</span>
+                <span class="value"><b>{{dateReprise}}</b></span>
+            </div>
+        </div>
+
+
+        <div class="section">
+            <div class="row">
+                <span class="label">Téléphone :</span>
+                <span class="value"><b>{{telephone}}</b></span>
+            </div>
+            <div class="row">
+                <span class="label">Adresse :</span>
+                <span class="value"><b>{{adresse}}</b></span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Vous devez soumettre vos demandes de congé dix jours avant leur date effective ; si le nombre de jours de congé demandé dépasse les 3 jours.</p>
+            <p>Il est strictement interdit de bénéficier de congé avant d'avoir reçu le titre de congé dûment signé de DRH & SP.</p>
+        </div>
+
+        <div class="signaturef">
+            <p>Tunis, le <b>{{currentDate}}</b></p>
+            <p>Signature</p>
+        </div>
+
+        <!-- Section des décisions -->
+        <div class="decision-section">
+            <div class="black-bar">Décision du Chef Hiérarchique</div>
+            <div class="row">
+                <label><input type="checkbox"> Accordé</label>
+                <label><input type="checkbox"> Refusé</label>
+            </div>
+            <div class="signature-block">
+                <p>..................le…………….</p>
+                <p>Signature</p>
+            </div>
+        </div>
+
+        <div class="decision-section">
+            <div class="black-bar">Décision du DRH & SP</div>
+            <div class="row">
+                <label><input type="checkbox"> Accordé Nbre de jours : ……….</label>
+                <label><input type="checkbox"> Refusé</label>
+            </div>
+            <div class="signature-block">
+                <p>..................le…………….</p>
+                <p>Signature</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+  
+  
