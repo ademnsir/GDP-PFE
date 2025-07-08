@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'nodejs-18'  // ok pour nodejs
-        // Pas de sonar ici !
+        nodejs 'nodejs-18' // ✅ Ton Node.js installé via Tools
+        // ❌ Pas de sonar-scanner ici, on l’utilise via "bat"
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env'  // nom config SonarQube dans Jenkins
+        SONARQUBE_ENV = 'sq_env' // ✅ Nom exact de ta config SonarQube dans Jenkins
     }
 
     stages {
@@ -54,10 +54,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline terminé avec succès!'
+            echo '✅ Pipeline terminé avec succès!'
         }
         failure {
-            echo 'Pipeline échoué.'
+            echo '❌ Pipeline échoué.'
         }
     }
 }
