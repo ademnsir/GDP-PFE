@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'nodejs-18' // ✅ Ton Node.js installé via Tools
-        // ❌ Pas de sonar-scanner ici, on l’utilise via "bat"
+        nodejs 'nodejs-18'
+        sonarScanner 'sonar-scanner'  // ici tu dois avoir nommé l'installation "sonar-scanner" dans Jenkins Global Tool Configuration
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env' // ✅ Nom exact de ta config SonarQube dans Jenkins
+        SONARQUBE_ENV = 'sq_env'
     }
 
     stages {
@@ -22,7 +22,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-frontend') {
                         bat '''
-                        sonar-scanner ^
+                        "%SONARSCANNER_HOME%\\bin\\sonar-scanner.bat" ^
                           -Dsonar.projectKey=GDPFrontend ^
                           -Dsonar.projectName=GDP-Frontend ^
                           -Dsonar.sources=. ^
@@ -39,7 +39,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-backend') {
                         bat '''
-                        sonar-scanner ^
+                        "%SONARSCANNER_HOME%\\bin\\sonar-scanner.bat" ^
                           -Dsonar.projectKey=GDPBackend ^
                           -Dsonar.projectName=GDP-Backend ^
                           -Dsonar.sources=src ^
@@ -54,10 +54,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Pipeline terminé avec succès!'
+            echo 'Pipeline terminé avec succès!'
         }
         failure {
-            echo '❌ Pipeline échoué.'
+            echo 'Pipeline échoué.'
         }
     }
 }
