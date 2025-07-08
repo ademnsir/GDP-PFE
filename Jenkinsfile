@@ -3,11 +3,11 @@ pipeline {
 
     tools {
         nodejs 'nodejs-18'
-        sonarScanner 'sonar-cli'   // Nom exact du scanner SonarQube configuré dans Jenkins
+        sonar 'sonar-cli'  // nom config SonarQube Scanner dans Jenkins
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env'  // Ton nom de config SonarQube dans Jenkins (Manage Jenkins > Configure System > SonarQube servers)
+        SONARQUBE_ENV = 'sq_env'
     }
 
     stages {
@@ -17,35 +17,12 @@ pipeline {
             }
         }
 
-        /*
-        stage('Install and Build Frontend') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    dir('gdp-frontend') {
-                        bat 'npm install --legacy-peer-deps'
-                        bat 'npm run build'
-                    }
-                }
-            }
-        }
-
-        stage('Install and Build Backend') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    dir('gdp-backend') {
-                        bat 'npm install --legacy-peer-deps'
-                        bat 'npm run build'
-                    }
-                }
-            }
-        }
-        */
-
         stage('SonarQube Analysis Frontend') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-frontend') {
                         bat '''
+                        where sonar-scanner
                         sonar-scanner ^
                           -Dsonar.projectKey=GDPFrontend ^
                           -Dsonar.projectName=GDP-Frontend ^
@@ -63,6 +40,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-backend') {
                         bat '''
+                        where sonar-scanner
                         sonar-scanner ^
                           -Dsonar.projectKey=GDPBackend ^
                           -Dsonar.projectName=GDP-Backend ^
