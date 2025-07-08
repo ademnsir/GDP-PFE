@@ -44,21 +44,7 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
-            steps {
-                dir('gdp-frontend') {
-                    bat 'npm run build --legacy-peer-deps'
-                }
-            }
-        }
-
-        stage('Build Backend') {
-            steps {
-                dir('gdp-backend') {
-                    bat 'npm run build --legacy-peer-deps'
-                }
-            }
-        }
+      
 
         stage('SonarQube Analysis Frontend') {
             steps {
