@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         nodejs 'nodejs-18' 
-        sonarQubeScanner 'sonar-cli' 
+        // supprimer sonarQubeScanner ici
     }
 
     environment {
@@ -26,7 +26,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                     bat 'sonar-scanner.bat'
+                    bat 'sonar-scanner.bat'
                 }
             }
         }
