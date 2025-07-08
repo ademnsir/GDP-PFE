@@ -31,20 +31,6 @@ pipeline {
                     bat 'npm test -- --testPathPattern=authService.test.ts --passWithNoTests'
                 }
             }
-            post {
-                always {
-                    dir('gdp-frontend') {
-                        publishHTML([
-                            allowMissing: false,
-                            alwaysLinkToLastBuild: true,
-                            keepAll: true,
-                            reportDir: 'coverage/lcov-report',
-                            reportFiles: 'index.html',
-                            reportName: 'Frontend Test Coverage'
-                        ])
-                    }
-                }
-            }
         }
 
         stage('SonarQube Analysis Frontend') {
