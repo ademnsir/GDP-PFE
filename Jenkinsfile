@@ -3,9 +3,7 @@ pipeline {
     tools {
         nodejs 'nodejs-18'
     }
-    environment {
-        SONARQUBE_ENV = 'sq_env'
-    }
+
     stages {
         stage('GitHub Checkout') {
             steps {
@@ -17,9 +15,9 @@ pipeline {
                 bat 'npm install --legacy-peer-deps'
             }
         }
-        stage('SonarQube Analysis') {
+         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                withSonarQubeEnv('sq_env') {
                     bat 'sonar-scanner'
                 }
             }
