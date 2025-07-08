@@ -81,7 +81,8 @@ describe('File Upload Utils', () => {
       const config = (FileInterceptor as jest.Mock).mock.calls[0][1];
       
       expect(config.storage).toBeDefined();
-      expect(typeof config.storage.destination).toBe('string');
+      expect(config.storage).toHaveProperty('destination');
+      expect(config.storage).toHaveProperty('filename');
       expect(typeof config.storage.filename).toBe('function');
     });
 

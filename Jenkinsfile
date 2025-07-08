@@ -32,6 +32,7 @@ pipeline {
             steps {
                 dir('gdp-backend') {
                     bat 'npm install --legacy-peer-deps'
+                    bat 'npm install @nestjs/testing --save-dev'
                 }
             }
         }

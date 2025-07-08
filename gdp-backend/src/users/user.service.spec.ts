@@ -3,9 +3,14 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { Project } from '../project/project.entity';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserRole, UserStatus } from './user.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
+
+// Mock des services externes
+jest.mock('../notifications/notification.service');
+jest.mock('../email/email.service');
 
 describe('UserService', () => {
   let service: UserService;
@@ -29,6 +34,18 @@ describe('UserService', () => {
         {
           provide: getRepositoryToken(User),
           useValue: mockRepository,
+        },
+        {
+          provide: getRepositoryToken(Project),
+          useValue: { find: jest.fn() },
+        },
+        {
+          provide: 'NotificationService',
+          useValue: { create: jest.fn() },
+        },
+        {
+          provide: 'EmailService',
+          useValue: { sendEmail: jest.fn() },
         },
       ],
     }).compile();

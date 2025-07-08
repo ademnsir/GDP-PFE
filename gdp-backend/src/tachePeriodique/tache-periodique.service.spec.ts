@@ -3,6 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { TachePeriodiqueService } from './tache-periodique.service';
 import { TachePeriodique, Periodicite } from './tache-periodique.entity';
+import { User } from '../users/user.entity';
 import { CreateTachePeriodiqueDto, UpdateTachePeriodiqueDto } from './dto/tache-periodique.dto';
 import { HttpException } from '@nestjs/common';
 
@@ -27,6 +28,10 @@ describe('TachePeriodiqueService', () => {
         {
           provide: getRepositoryToken(TachePeriodique),
           useValue: mockRepository,
+        },
+        {
+          provide: getRepositoryToken(User),
+          useValue: { find: jest.fn() },
         },
       ],
     }).compile();
