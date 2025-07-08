@@ -201,8 +201,6 @@ pipeline {
         always {
             // Nettoyage des images non utilisées
             bat 'docker image prune -f'
-        }
-        always {
             echo '🧹 Nettoyage terminé'
         }
     }
