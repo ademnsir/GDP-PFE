@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
 import { getUserRole } from "@/services/authService";
@@ -17,9 +16,8 @@ import {
   UserGroupIcon,
   StarIcon,
   ClipboardDocumentListIcon,
-  ChartBarIcon,
 } from "@heroicons/react/24/outline";
-import { Menu, X } from "lucide-react";
+
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -169,11 +167,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     },
   ];
 
-  const sidebarVariants = {
+  const sidebarVariants: Variants = {
     open: {
       width: "280px",
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 30
       }
@@ -181,14 +179,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     closed: {
       width: "70px",
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 30
       }
     }
   };
 
-  const contentVariants = {
+  const contentVariants: Variants = {
     open: {
       opacity: 1,
       x: 0,
