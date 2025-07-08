@@ -3,7 +3,6 @@ pipeline {
     tools {
         nodejs 'nodejs-18'
     }
-
     stages {
         stage('GitHub Checkout') {
             steps {
@@ -15,10 +14,13 @@ pipeline {
                 bat 'npm install --legacy-peer-deps'
             }
         }
-           stage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
+            environment {
+                SCANNER_HOME = tool name: 'SonarQubeScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            }
             steps {
                 withSonarQubeEnv('sq_env') {
-                    bat 'sonar-scanner'
+                    bat "${SCANNER_HOME}\\bin\\sonar-scanner.bat"
                 }
             }
         }
