@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'nodejs-18'          // Ton NodeJS configuré dans Jenkins
-        sonar 'sonar-scanner'       // Nom exact de l'installation SonarQube Scanner configurée
+        nodejs 'nodejs-18'  // ok pour nodejs
+        // Pas de sonar ici !
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env'    // Nom de ta config SonarQube dans Jenkins (Manage Jenkins > Configure System > SonarQube servers)
+        SONARQUBE_ENV = 'sq_env'  // nom config SonarQube dans Jenkins
     }
 
     stages {
@@ -17,36 +17,12 @@ pipeline {
             }
         }
 
-        /*
-        stage('Install and Build Frontend') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    dir('gdp-frontend') {
-                        bat 'npm install --legacy-peer-deps'
-                        bat 'npm run build'
-                    }
-                }
-            }
-        }
-
-        stage('Install and Build Backend') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    dir('gdp-backend') {
-                        bat 'npm install --legacy-peer-deps'
-                        bat 'npm run build'
-                    }
-                }
-            }
-        }
-        */
-
         stage('SonarQube Analysis Frontend') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-frontend') {
                         bat '''
-                        sonar-scanner ^
+                        sonar:sonar ^
                           -Dsonar.projectKey=GDPFrontend ^
                           -Dsonar.projectName=GDP-Frontend ^
                           -Dsonar.sources=. ^
@@ -63,7 +39,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-backend') {
                         bat '''
-                        sonar-scanner ^
+                        sonar-sonar ^
                           -Dsonar.projectKey=GDPBackend ^
                           -Dsonar.projectName=GDP-Backend ^
                           -Dsonar.sources=src ^
