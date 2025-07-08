@@ -3,10 +3,11 @@ pipeline {
 
     tools {
         nodejs 'nodejs-18'
+        sonarScanner 'sonar-cli'   // Nom exact du scanner SonarQube configuré dans Jenkins
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env'  // Ton nom de config SonarQube dans Jenkins
+        SONARQUBE_ENV = 'sq_env'  // Ton nom de config SonarQube dans Jenkins (Manage Jenkins > Configure System > SonarQube servers)
     }
 
     stages {
