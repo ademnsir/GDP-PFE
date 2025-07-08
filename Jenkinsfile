@@ -25,24 +25,34 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies Backend') {
+            steps {
+                dir('gdp-backend') {
+                    bat 'npm install'
+                }
+            }
+        }
+
         stage('Unit Tests Frontend') {
             steps {
                 dir('gdp-frontend') {
                     bat 'npm test -- --testPathPattern=authService.test.ts --passWithNoTests'
                 }
             }
-            post {
-                always {
-                    dir('gdp-frontend') {
-                        publishHTML([
-                            allowMissing: false,
-                            alwaysLinkToLastBuild: true,
-                            keepAll: true,
-                            reportDir: 'coverage/lcov-report',
-                            reportFiles: 'index.html',
-                            reportName: 'Frontend Test Coverage'
-                        ])
-                    }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('gdp-frontend') {
+                    bat 'npm run build'
+                }
+            }
+        }
+
+        stage('Build Backend') {
+            steps {
+                dir('gdp-backend') {
+                    bat 'npm run build'
                 }
             }
         }
@@ -57,7 +67,7 @@ pipeline {
                           -Dsonar.projectName=GDP-Frontend ^
                           -Dsonar.sources=. ^
                           -Dsonar.sourceEncoding=UTF-8 ^
-                          -Dsonar.exclusions=node_modules/**,out/**,build/**
+                          -Dsonar.exclusions=node_modules/**,out/**,build/**,.next/**
                         '''
                     }
                 }
@@ -80,14 +90,39 @@ pipeline {
                 }
             }
         }
+
+        stage('Archive Build Artifacts') {
+            steps {
+                echo '📦 Archivage des artefacts de build...'
+                
+                // Archiver le build frontend
+                dir('gdp-frontend') {
+                    archiveArtifacts artifacts: '.next/**/*', fingerprint: true
+                }
+                
+                // Archiver le build backend
+                dir('gdp-backend') {
+                    archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+                }
+                
+                echo '✅ Artefacts archivés avec succès!'
+            }
+        }
     }
 
     post {
         success {
             echo '✅ Pipeline terminé avec succès!'
+            echo '📊 Analyses SonarQube disponibles sur:'
+            echo '   - Frontend: http://192.168.100.18:5050/dashboard?id=GDPFrontend'
+            echo '   - Backend: http://192.168.100.18:5050/dashboard?id=GDPBackend'
+            echo '📦 Artefacts de build disponibles dans Jenkins'
         }
         failure {
             echo '❌ Pipeline échoué.'
+        }
+        always {
+            echo '🧹 Nettoyage terminé'
         }
     }
 }
