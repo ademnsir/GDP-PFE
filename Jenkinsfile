@@ -16,6 +16,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Install and Build Frontend') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -37,6 +38,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('SonarQube Analysis Frontend') {
             steps {
