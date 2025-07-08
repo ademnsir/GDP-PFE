@@ -31,7 +31,7 @@ pipeline {
         stage('Install Dependencies Backend') {
             steps {
                 dir('gdp-backend') {
-                    bat 'npm install'
+                    bat 'npm install --legacy-peer-deps'
                 }
             }
         }
