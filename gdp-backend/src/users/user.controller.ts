@@ -28,7 +28,6 @@ import { UserRole, UserStatus } from './user.entity';
 import { Public } from '../auth/decorators/public.decorator';
 import { RequestPasswordResetDto, ResetPasswordDto } from './dto/reset-password.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { In } from 'typeorm';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)

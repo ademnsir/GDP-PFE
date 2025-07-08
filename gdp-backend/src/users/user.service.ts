@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { User, UserStatus, UserRole } from './user.entity';
 import { Project } from '../project/project.entity';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
@@ -56,7 +56,7 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const projectEntities = projects
-      ? await this.projectRepository.findByIds(projects)
+      ? await this.projectRepository.find({ where: { id: In(projects) } })
       : [];
 
     const newUser = this.userRepository.create({
