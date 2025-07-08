@@ -28,6 +28,7 @@ import { UserRole, UserStatus } from './user.entity';
 import { Public } from '../auth/decorators/public.decorator';
 import { RequestPasswordResetDto, ResetPasswordDto } from './dto/reset-password.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { In } from 'typeorm';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -75,7 +76,8 @@ export class UserController {
         },
       }),
       fileFilter: (req, file, callback) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+        const imageRegex = /\/(jpg|jpeg|png)$/;
+        if (!imageRegex.exec(file.mimetype)) {
           return callback(
             new HttpException('Seules les images JPG, JPEG et PNG sont autorisées', HttpStatus.BAD_REQUEST),
             false,
@@ -183,7 +185,8 @@ export class UserController {
         },
       }),
       fileFilter: (req, file, callback) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+        const imageRegex = /\/(jpg|jpeg|png)$/;
+        if (!imageRegex.exec(file.mimetype)) {
           return callback(
             new HttpException('Only image files are allowed!', HttpStatus.BAD_REQUEST),
             false,
@@ -278,7 +281,8 @@ export class UserController {
         },
       }),
       fileFilter: (req, file, callback) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+        const imageRegex = /\/(jpg|jpeg|png)$/;
+        if (!imageRegex.exec(file.mimetype)) {
           return callback(
             new HttpException('Seules les images JPG, JPEG et PNG sont autorisées', HttpStatus.BAD_REQUEST),
             false,

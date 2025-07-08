@@ -44,7 +44,8 @@ import {
           },
         }),
         fileFilter: (req, file, callback) => {
-          if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+          const imageRegex = /\/(jpg|jpeg|png)$/;
+          if (!imageRegex.exec(file.mimetype)) {
             return callback(
               new HttpException('Seules les images JPG, JPEG et PNG sont autorisées', HttpStatus.BAD_REQUEST),
               false,
