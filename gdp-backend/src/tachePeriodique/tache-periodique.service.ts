@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { TachePeriodique } from './tache-periodique.entity';
 import { CreateTachePeriodiqueDto, UpdateTachePeriodiqueDto } from './dto/tache-periodique.dto';
 import { User } from '../users/user.entity';
@@ -22,7 +22,7 @@ export class TachePeriodiqueService {
    */
   async createTache(dto: CreateTachePeriodiqueDto): Promise<TachePeriodique> {
     // Récupérer les utilisateurs sélectionnés
-    const users = await this.userRepository.find({ where: { id: In(dto.users) } });
+    const users = await this.userRepository.findByIds(dto.users);
     if (!users || users.length === 0) {
       throw new Error('Aucun utilisateur valide trouvé pour cette tâche.');
     }
@@ -214,7 +214,7 @@ export class TachePeriodiqueService {
     console.log('Tâche trouvée:', tache);
     
     if (dto.users) {
-      const users = await this.userRepository.find({ where: { id: In(dto.users) } });
+      const users = await this.userRepository.findByIds(dto.users);
       if (!users || users.length === 0) {
         throw new Error('Aucun utilisateur valide trouvé pour cette tâche.');
       }

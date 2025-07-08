@@ -4,5 +4,15 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true
-  }
-} 
+  },
+  "assets": [
+    {
+      "include": "tachePeriodique/email-template.html",
+      "outDir": "dist/tachePeriodique"
+    },
+    {
+      "include": "conge/conge-template.html",
+      "outDir": "dist/templates"
+    }
+  ]
+}
