@@ -22,7 +22,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('sq_env') {
                     bat '''
-                        sonar-scanner.bat ^
+                        sonar-scanner ^
                           -Dsonar.projectKey=pfe-gdp ^
                           -Dsonar.projectName=PFE-GDP ^
                           -Dsonar.projectVersion=1.0 ^
