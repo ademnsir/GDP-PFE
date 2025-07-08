@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         nodejs 'nodejs-18' 
+        sonarQubeScanner 'sonar-cli' 
     }
 
     environment {
@@ -25,7 +26,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    bat 'sonar-scanner'
+                     bat 'sonar-scanner.bat'
                 }
             }
         }
