@@ -1,10 +1,41 @@
 pipeline {
     agent any
+
+    environment {
+        SONARQUBE_ENV = 'sq_env' // Nom du serveur SonarQube dans Jenkins
+    }
+
     stages {
-        stage('Checkout') {
+        stage('GitHub Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/ademnsir/GDP-PFE.git'
+                checkout scm
             }
+        }
+
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    sh 'sonar-scanner'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline terminé.'
+        }
+        success {
+            echo 'Pipeline réussi.'
+        }
+        failure {
+            echo 'Pipeline échoué.'
         }
     }
 }
