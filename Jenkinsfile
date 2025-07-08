@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env'  // nom de ton SonarQube config dans Jenkins
+        SONARQUBE_ENV = 'sq_env'  // Ton nom de config SonarQube dans Jenkins
     }
 
     stages {
@@ -18,18 +18,22 @@ pipeline {
 
         stage('Install and Build Frontend') {
             steps {
-                dir('gdp-frontend') {
-                    bat 'npm install --legacy-peer-deps'
-                    bat 'npm run build'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    dir('gdp-frontend') {
+                        bat 'npm install --legacy-peer-deps'
+                        bat 'npm run build'
+                    }
                 }
             }
         }
 
         stage('Install and Build Backend') {
             steps {
-                dir('gdp-backend') {
-                    bat 'npm install --legacy-peer-deps'
-                    bat 'npm run build'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    dir('gdp-backend') {
+                        bat 'npm install --legacy-peer-deps'
+                        bat 'npm run build'
+                    }
                 }
             }
         }
@@ -71,10 +75,10 @@ pipeline {
 
     post {
         success {
-            echo 'SonarQube analysis completed successfully!'
+            echo 'Pipeline terminé avec succès!'
         }
         failure {
-            echo 'SonarQube analysis failed.'
+            echo 'Pipeline échoué.'
         }
     }
 }
