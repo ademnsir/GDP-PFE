@@ -8,8 +8,8 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'sq_env' // Nom de ta config SonarQube
         PATH = "C:\\Users\\Mqi Katan\\Desktop\\sonar-scanner-7.1.0.4889-windows-x64\\bin;C:\\Program Files\\Docker\\Docker\\resources\\bin;%PATH%"
-        DOCKER_BACKEND_IMAGE = 'adem012/gdp-backend' // Image backend Docker Hub
-        DOCKER_FRONTEND_IMAGE = 'adem012/gdp-frontend' // Image frontend Docker Hub
+        DOCKER_BACKEND_IMAGE = 'adem012/gdp-backend' 
+        DOCKER_FRONTEND_IMAGE = 'adem012/gdp-frontend' 
         DOCKER_TAG = 'latest'
     }
 
@@ -122,9 +122,9 @@ pipeline {
                         
                         echo '🏷️ Tag des images pour Docker Hub...'
                         // Tag de l'image backend
-                        bat 'docker tag gdp-backend %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                        bat 'docker tag pfe-adem-backend %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
                         // Tag de l'image frontend
-                        bat 'docker tag gdp-frontend %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+                        bat 'docker tag pfe-adem-frontend %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
                         
                         echo '✅ Images taggées:'
                         echo '   - Backend: %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
