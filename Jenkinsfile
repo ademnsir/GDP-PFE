@@ -3,11 +3,11 @@ pipeline {
 
     tools {
         nodejs 'nodejs-18'
-        sonarScanner 'sonar-scanner'  // ici tu dois avoir nommé l'installation "sonar-scanner" dans Jenkins Global Tool Configuration
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env'
+        SONARQUBE_ENV = 'sq_env' // Nom de ta config SonarQube
+        PATH = "C:\\Users\\Mqi Katan\\Desktop\\sonar-scanner-7.1.0.4889-windows-x64\\bin;%PATH%"
     }
 
     stages {
@@ -22,7 +22,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-frontend') {
                         bat '''
-                        "%SONARSCANNER_HOME%\\bin\\sonar-scanner.bat" ^
+                        sonar-scanner ^
                           -Dsonar.projectKey=GDPFrontend ^
                           -Dsonar.projectName=GDP-Frontend ^
                           -Dsonar.sources=. ^
@@ -39,7 +39,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-backend') {
                         bat '''
-                        "%SONARSCANNER_HOME%\\bin\\sonar-scanner.bat" ^
+                        sonar-scanner ^
                           -Dsonar.projectKey=GDPBackend ^
                           -Dsonar.projectName=GDP-Backend ^
                           -Dsonar.sources=src ^
@@ -54,10 +54,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline terminé avec succès!'
+            echo '✅ Pipeline terminé avec succès!'
         }
         failure {
-            echo 'Pipeline échoué.'
+            echo '❌ Pipeline échoué.'
         }
     }
 }
