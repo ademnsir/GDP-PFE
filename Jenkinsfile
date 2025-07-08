@@ -3,11 +3,11 @@ pipeline {
 
     tools {
         nodejs 'nodejs-18'
-        sonar 'sonar-cli'  // nom config SonarQube Scanner dans Jenkins
+        // pas de sonar ici
     }
 
     environment {
-        SONARQUBE_ENV = 'sq_env'
+        SONARQUBE_ENV = 'sq_env'  // nom config SonarQube dans Jenkins
     }
 
     stages {
@@ -22,7 +22,6 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-frontend') {
                         bat '''
-                        where sonar-scanner
                         sonar-scanner ^
                           -Dsonar.projectKey=GDPFrontend ^
                           -Dsonar.projectName=GDP-Frontend ^
@@ -40,7 +39,6 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-backend') {
                         bat '''
-                        where sonar-scanner
                         sonar-scanner ^
                           -Dsonar.projectKey=GDPBackend ^
                           -Dsonar.projectName=GDP-Backend ^
