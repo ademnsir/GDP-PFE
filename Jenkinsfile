@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         SONARQUBE_ENV = 'sq_env' // Nom de ta config SonarQube
-        PATH = "C:\\Users\\Mqi Katan\\Desktop\\sonar-scanner-7.1.0.4889-windows-x64\\bin;%PATH%"
+        PATH = "C:\\Users\\Mqi Katan\\Desktop\\sonar-scanner-7.1.0.4889-windows-x64\\bin;C:\\Program Files\\Docker\\Docker\\resources\\bin;%PATH%"
         DOCKER_BACKEND_IMAGE = 'adem012/gdp-backend' // Image backend Docker Hub
         DOCKER_FRONTEND_IMAGE = 'adem012/gdp-frontend' // Image frontend Docker Hub
         DOCKER_TAG = 'latest'
@@ -98,6 +98,21 @@ pipeline {
             }
         }
 
+        stage('Build Frontend') {
+            steps {
+                dir('gdp-frontend') {
+                    bat 'npm run build'
+                }
+            }
+        }
+        stage('Build Backend') {
+            steps {
+                dir('gdp-backend') {
+                    bat 'npm run build'
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 script {
@@ -128,19 +143,13 @@ pipeline {
                     try {
                         echo '🚀 Push des images vers Docker Hub...'
                         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                            // Connexion à Docker Hub
-                            bat '''
-                            echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
-                            '''
-                            
+                            bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
                             // Push de l'image backend
                             echo '📤 Push de l\'image backend...'
                             bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
-                            
                             // Push de l'image frontend
                             echo '📤 Push de l\'image frontend...'
                             bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
-                            
                             echo '✅ Images poussées avec succès vers Docker Hub!'
                         }
                     } catch (Exception e) {
