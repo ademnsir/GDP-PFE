@@ -14,18 +14,21 @@ pipeline {
                 bat 'npm install --legacy-peer-deps'
             }
         }
-        stage('SonarQube Analysis') {
-            environment {
-                // Use the name of the SonarQube Scanner installation as configured in Jenkins
-                SCANNER_HOME = tool 'sq_env'
-            }
-            steps {
-                withSonarQubeEnv('sq_env') {
-                    // Use the scanner from the configured tool
-                    bat "${SCANNER_HOME}\\bin\\sonar-scanner.bat"
-                }
-            }
+    stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv("${SONARQUBE_ENV}") {
+            bat '''
+                sonar-scanner.bat ^
+                  -Dsonar.projectKey=pfe-gdp ^
+                  -Dsonar.projectName=PFE-GDP ^
+                  -Dsonar.projectVersion=1.0 ^
+                  -Dsonar.sources=. ^
+                  -Dsonar.sourceEncoding=UTF-8 ^
+                  -Dsonar.exclusions=node_modules/**,build/**,dist/**
+            '''
         }
+    }
+}
     }
     post {
         always {
