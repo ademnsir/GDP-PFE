@@ -44,7 +44,13 @@ pipeline {
             }
         }
 
-      
+        stage('Unit Tests Backend') {
+            steps {
+                dir('gdp-backend') {
+                    bat 'npm test --coverage --passWithNoTests'
+                }
+            }
+        }
 
         stage('SonarQube Analysis Frontend') {
             steps {
