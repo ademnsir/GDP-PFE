@@ -14,14 +14,14 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                 bat 'npm install --legacy-peer-deps'
+                 sh 'npm install --legacy-peer-deps'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    bat 'sonar-scanner'
+                    sh 'sonar-scanner'
                 }
             }
         }
