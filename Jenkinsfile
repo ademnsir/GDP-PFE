@@ -5,45 +5,76 @@ pipeline {
         nodejs 'nodejs-18'
     }
 
+    environment {
+        SONARQUBE_ENV = 'sq_env'  // nom de ton SonarQube config dans Jenkins
+    }
+
     stages {
-        stage('GitHub Checkout') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Install dependencies') {
+        stage('Install and Build Frontend') {
             steps {
-                bat 'npm install --legacy-peer-deps'
+                dir('gdp-frontend') {
+                    bat 'npm install --legacy-peer-deps'
+                    bat 'npm run build'
+                }
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('Install and Build Backend') {
             steps {
-                withSonarQubeEnv('sq_env') {
-                    bat '''
+                dir('gdp-backend') {
+                    bat 'npm install --legacy-peer-deps'
+                    bat 'npm run build'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis Frontend') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    dir('gdp-frontend') {
+                        bat '''
                         sonar-scanner ^
-                          -Dsonar.projectKey=pfe-gdp ^
-                          -Dsonar.projectName=PFE-GDP ^
-                          -Dsonar.projectVersion=1.0 ^
+                          -Dsonar.projectKey=GDPFrontend ^
+                          -Dsonar.projectName=GDP-Frontend ^
                           -Dsonar.sources=. ^
                           -Dsonar.sourceEncoding=UTF-8 ^
-                          -Dsonar.exclusions=node_modules/**,build/**,dist/**
-                    '''
+                          -Dsonar.exclusions=node_modules/**,out/**,build/**
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis Backend') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    dir('gdp-backend') {
+                        bat '''
+                        sonar-scanner ^
+                          -Dsonar.projectKey=GDPBackend ^
+                          -Dsonar.projectName=GDP-Backend ^
+                          -Dsonar.sources=src ^
+                          -Dsonar.sourceEncoding=UTF-8 ^
+                          -Dsonar.exclusions=node_modules/**,dist/**
+                        '''
+                    }
                 }
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline terminé.'
-        }
         success {
-            echo 'Pipeline réussi.'
+            echo 'SonarQube analysis completed successfully!'
         }
         failure {
-            echo 'Pipeline échoué.'
+            echo 'SonarQube analysis failed.'
         }
     }
 }
