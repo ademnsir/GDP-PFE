@@ -18,9 +18,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { createImageUploadInterceptor, createImageUploadInterceptorWithCustomMessage } from '../common/utils/file-upload.util';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -64,28 +62,7 @@ export class UserController {
   }
   @Public()
   @Post('/add')
-  @UseInterceptors(
-    FileInterceptor('photo', {
-      storage: diskStorage({
-        destination: './uploads/photos',
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        const imageRegex = /\/(jpg|jpeg|png)$/;
-        if (!imageRegex.exec(file.mimetype)) {
-          return callback(
-            new HttpException('Seules les images JPG, JPEG et PNG sont autorisées', HttpStatus.BAD_REQUEST),
-            false,
-          );
-        }
-        callback(null, true);
-      },
-    }),
-  )
+  @UseInterceptors(createImageUploadInterceptor('photo'))
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body() createUserDto: CreateUserDto,
@@ -173,28 +150,7 @@ export class UserController {
 
   @Post('/upload-photo')
   @Roles(UserRole.ADMIN, UserRole.INFRA)
-  @UseInterceptors(
-    FileInterceptor('photo', {
-      storage: diskStorage({
-        destination: './uploads/photos',
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        const imageRegex = /\/(jpg|jpeg|png)$/;
-        if (!imageRegex.exec(file.mimetype)) {
-          return callback(
-            new HttpException('Only image files are allowed!', HttpStatus.BAD_REQUEST),
-            false,
-          );
-        }
-        callback(null, true);
-      },
-    }),
-  )
+  @UseInterceptors(createImageUploadInterceptorWithCustomMessage('photo', 'Only image files are allowed!'))
   async uploadPhoto(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new HttpException('File upload failed', HttpStatus.BAD_REQUEST);
@@ -269,28 +225,7 @@ export class UserController {
 
   @Put('/update-photo/:id')
   @Roles(UserRole.ADMIN, UserRole.INFRA)
-  @UseInterceptors(
-    FileInterceptor('photo', {
-      storage: diskStorage({
-        destination: './uploads/photos',
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        const imageRegex = /\/(jpg|jpeg|png)$/;
-        if (!imageRegex.exec(file.mimetype)) {
-          return callback(
-            new HttpException('Seules les images JPG, JPEG et PNG sont autorisées', HttpStatus.BAD_REQUEST),
-            false,
-          );
-        }
-        callback(null, true);
-      },
-    }),
-  )
+  @UseInterceptors(createImageUploadInterceptor('photo'))
   async updatePhoto(
     @Param('id', ParseIntPipe) id: number,
     @UploadedFile() file: Express.Multer.File,
