@@ -15,10 +15,10 @@ pipeline {
                 bat 'npm install --legacy-peer-deps'
             }
         }
-         stage('SonarQube Analysis') {
+           stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sq_env') {
-                    bat 'npm sonar-scanner'
+                    bat 'sonar-scanner'
                 }
             }
         }
