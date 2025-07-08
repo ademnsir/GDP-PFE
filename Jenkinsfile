@@ -8,6 +8,9 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'sq_env' // Nom de ta config SonarQube
         PATH = "C:\\Users\\Mqi Katan\\Desktop\\sonar-scanner-7.1.0.4889-windows-x64\\bin;%PATH%"
+        DOCKER_BACKEND_IMAGE = 'adem012/gdp-backend' // Image backend Docker Hub
+        DOCKER_FRONTEND_IMAGE = 'adem012/gdp-frontend' // Image frontend Docker Hub
+        DOCKER_TAG = 'latest'
     }
 
     stages {
@@ -66,14 +69,92 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build') {
+            steps {
+                echo '🔨 Construction des images Docker...'
+                bat 'docker-compose build'
+                
+                echo '🏷️ Tag des images pour Docker Hub...'
+                // Tag de l'image backend
+                bat 'docker tag gdp-backend %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                // Tag de l'image frontend
+                bat 'docker tag gdp-frontend %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+                
+                echo '✅ Images taggées:'
+                echo '   - Backend: %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                echo '   - Frontend: %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+            }
+        }
+
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    echo '🚀 Push des images vers Docker Hub...'
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Connexion à Docker Hub
+                        bat '''
+                        echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
+                        '''
+                        
+                        // Push de l'image backend
+                        echo '📤 Push de l\'image backend...'
+                        bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                        
+                        // Push de l'image frontend
+                        echo '📤 Push de l\'image frontend...'
+                        bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+                        
+                        echo '✅ Images poussées avec succès vers Docker Hub!'
+                    }
+                }
+            }
+        }
+
+        stage('Docker Deploy') {
+            steps {
+                echo '🚀 Déploiement des conteneurs...'
+                bat 'docker-compose down'
+                bat 'docker-compose up -d'
+                
+                // Attendre que les services soient prêts
+                script {
+                    timeout(5) {
+                        waitUntil {
+                            try {
+                                bat 'docker-compose ps | findstr "Up"'
+                                return true
+                            } catch (Exception e) {
+                                echo 'Services en cours de démarrage...'
+                                sleep(10)
+                                return false
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     post {
         success {
             echo '✅ Pipeline terminé avec succès!'
+            echo '🌐 Application déployée et accessible sur:'
+            echo '   - Frontend: http://localhost:3001'
+            echo '   - Backend: http://localhost:3000'
+            echo '   - Database: localhost:5433'
+            echo '🐳 Images Docker Hub:'
+            echo '   - Backend: %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+            echo '   - Frontend: %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
         }
         failure {
             echo '❌ Pipeline échoué.'
+            // Nettoyage en cas d'échec
+            bat 'docker-compose down'
+        }
+        always {
+            // Nettoyage des images non utilisées
+            bat 'docker image prune -f'
         }
     }
 }
