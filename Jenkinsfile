@@ -22,7 +22,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-frontend') {
                         bat '''
-                        sonar:sonar ^
+                        sonar-scanner ^
                           -Dsonar.projectKey=GDPFrontend ^
                           -Dsonar.projectName=GDP-Frontend ^
                           -Dsonar.sources=. ^
@@ -39,7 +39,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     dir('gdp-backend') {
                         bat '''
-                        sonar-sonar ^
+                        sonar-scanner ^
                           -Dsonar.projectKey=GDPBackend ^
                           -Dsonar.projectName=GDP-Backend ^
                           -Dsonar.sources=src ^
