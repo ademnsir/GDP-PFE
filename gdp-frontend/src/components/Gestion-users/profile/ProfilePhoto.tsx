@@ -50,7 +50,7 @@ const ProfilePhoto = ({ photo, firstName, lastName, userId, onPhotoUpdate }: Pro
 
     // Vérification de la taille du fichier (5MB max)
     if (file.size > 5 * 1024 * 1024) {
-      setUploadError("La taille de l'image ne doit pas dépasser 5MB");
+              setUploadError("La taille de l&apos;image ne doit pas dépasser 5MB");
       return;
     }
 
@@ -242,7 +242,7 @@ const ProfilePhoto = ({ photo, firstName, lastName, userId, onPhotoUpdate }: Pro
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-all duration-300 shadow-sm hover:shadow-md"
           >
             <CameraIcon className="w-5 h-5" />
-            Changer l'image de profil
+            Changer l&apos;image de profil
           </button>
         )}
       </div>
