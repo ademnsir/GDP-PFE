@@ -39,7 +39,7 @@ pipeline {
         stage('Unit Tests Frontend') {
             steps {
                 dir('gdp-frontend') {
-                    bat 'npm test -- --testPathPattern=authService.test.ts --passWithNoTests'
+                    bat 'npm test -- --testPathPattern=src/test/authService.test.ts --passWithNoTests'
                 }
             }
         }
